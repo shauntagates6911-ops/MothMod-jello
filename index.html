@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MothMod</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .container {
+      margin-top: 60px;
+    }
+
+    .moth-img {
+      width: 220px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    .login-btn, .logout-btn {
+      padding: 12px 20px;
+      background: #6a5acd;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .login-btn:hover, .logout-btn:hover {
+      background: #4b3bb3;
+    }
+
+    .username {
+      font-size: 26px;
+      margin-top: 20px;
+      color: #333;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="container">
+    <h1>MothMod</h1>
+
+    <!-- Where login status appears -->
+    <div id="status"></div>
+
+    <!-- Login button -->
+    <button class="login-btn" id="loginBtn">Login</button>
+
+    <!-- Logout button -->
+    <button class="logout-btn" id="logoutBtn" style="display:none;">Logout</button>
+  </div>
+
+  <script>
+    // Initialize Supabase
+    const supabase = supabase.createClient(
+      "YOUR_SUPABASE_URL",
+      "YOUR_SUPABASE_ANON_KEY"
+    );
+
+    const statusDiv = document.getElementById("status");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    async function checkUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        // Not logged in
+        statusDiv.innerHTML = "<h2>Guest</h2>";
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+      } else {
+        // Logged in
+        statusDiv.innerHTML = `
+          <img class="moth-img" src="mothmod_profile.jpg">
+          <div class="username">Hello, 🦋 ${user.email}</div>
+        `;
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+      }
+    }
+
+    // Login with Supabase magic link
+    loginBtn.addEventListener("click", async () => {
+      const email = prompt("Enter your email to login:");
+      if (!email) return;
+
+      await supabase.auth.signInWithOtp({ email });
+      alert("Your magic link is sent! Check your email.");
+    });
+
+    // Logout
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      checkUser();
+    });
+
+    // Check login on page load
+    checkUser();
+  </script>
+
+</body>
+</html>
