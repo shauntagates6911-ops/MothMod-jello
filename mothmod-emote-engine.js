@@ -44,3 +44,28 @@ export function parseEmotes(text) {
 export function renderTextWithEmotes(element, text) {
   element.innerHTML = parseEmotes(text);
 }
+// Add new emotes to MothModEmotes
+
+MothModEmotes[":cold:"] = {
+  id: "cold",
+  file: "emotes/cold.png",
+  alt: "cold emote"
+};
+
+MothModEmotes[":fading:"] = {
+  id: "fading",
+  file: "emotes/fading.png",
+  alt: "fading emote"
+};
+
+MothModEmotes[":king:"] = {
+  id: "king",
+  file: "emotes/king.png",
+  alt: "king emote"
+};
+
+MothModEmotes[":saturn:"] = {
+  id: "saturn",
+  file: "emotes/saturn.png",
+  alt: "saturn emote"
+};
